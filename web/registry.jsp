@@ -1,0 +1,181 @@
+<%--
+  Created by IntelliJ IDEA.
+  User: 99365
+  Date: 2020/10/14
+  Time: 16:17
+  To change this template use File | Settings | File Templates.
+--%>
+<%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<html>
+<head>
+    <title>注册表</title>
+    <link rel="stylesheet" href="./layui/css/layui.css">
+    <script src="./layui/layui.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+        }
+        .regWrapper
+        {
+            float:left;
+            position: absolute;
+            left:160px;
+            margin: 100px auto;
+            width:420px;
+            height: 520px;
+            background-color: white;
+            opacity: 0.8;
+            box-shadow: 3px 3px 8px #8D8D8D;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class=box1>
+    <img src="./login_style/img/6.jpg" alt="没有图片了"style="position: absolute;bottom: 0px; float:left;width: 750px;height:740px;">
+<div class="regWrapper">
+    <form class="layui-form layui-form-pane" action="" style="padding-top: 20px;padding-left:16px;margin-right: 20px">
+        <div class="layui-form-item">
+            <div class="layui-inline">
+            <label class="layui-form-label "><li class="layui-icon layui-icon-username ">&nbsp;姓名:</li></label>
+            <div class="layui-input-inline">
+                <input type="text" id="username" name="username" required  lay-verify="required|usernames" placeholder="请输入姓名" autocomplete="off" class="layui-input">
+            </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+            <label class="layui-form-label  "><li class="layui-icon layui-icon-key">&nbsp;设置密码:</li></label>
+            <div class="layui-input-inline">
+                <input id="pw1" type="password" name="password" required lay-verify="required|pass" placeholder="请输入密码" autocomplete="off" class="layui-input">
+            </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label "><li class="layui-icon layui-icon-password">&nbsp;确认密码:</li></label>
+                <div class="layui-input-inline">
+                    <input id="pw2" type="password" name="password2" required lay-verify="required|pass" placeholder="请再次输入密码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+                <label class="layui-form-label "><li class="layui-icon layui-icon-cellphone">&nbsp;手机号:</li></label>
+                <div class="layui-input-inline">
+                    <input type="text" id="phone" name="phone" required  lay-verify="required|phone1" placeholder="请输入手机号" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+        <div class="layui-form-item" >
+            <div class="layui-inline">
+                <label class="layui-form-label "><li class="layui-icon layui-icon-vercode">&nbsp;验证码:</li></label>
+                <div class="layui-input-inline">
+                    <input type="text" id="phoneCheckCode" name="phoneCheckCode" required  lay-verify="required" placeholder="请输入手机验证码" autocomplete="off" class="layui-input">
+                </div>
+            </div>
+        </div>
+
+
+        <div class="layui-form-item layui-form-text">
+            <label class="layui-form-label "><li class="layui-icon layui-icon-align-left">&nbsp;备注:</li></label>
+            <div class="layui-input-block">
+                <textarea id="remark" placeholder="请输入内容" class="layui-textarea" name="remark"></textarea>
+            </div>
+        </div>
+        <div class="layui-form-item">
+            <div class="layui-inline">
+            <div class="layui-input-inline">
+                <button class="layui-btn" lay-submit lay-filter="formDemo">立即提交</button>
+                <button type="reset" class="layui-btn layui-btn-primary">重置</button>
+            </div>
+            </div>
+        </div>
+    </form>
+    <button style="position: absolute;right:5px;top:252px" class="layui-btn" id="get-code">点击获取</button>
+</div>
+</div>
+</body>
+<script>
+    //Demo
+    layui.use(['form','jquery','layer'], function(){
+        var form = layui.form;
+        var $=layui.jquery;
+        var layer=layui.layer;
+        form.verify({
+            pass:[/^(?![0-9]+$)(?![a-zA-Z]+$)[0-9A-Za-z]{6,12}$/,'密码必须要是6-12位且字母加数字'],
+            usernames:[/^[\u4e00-\u9fa5]{2,6}$/,'用户名必须是中文，且2-6位 '],
+            phone1:[/^1[3-9][0-9]{9}$/,"请输入正确的手机号"]
+        });
+
+        //监听提交
+        form.on('submit(formDemo)', function(data){
+            var username=$("#username").val();
+            var pw1=$("#pw1").val();
+            var phone=$("#phone").val();
+            var phoneCheckCode=$("#phoneCheckCode").val();
+            var remark=$("#remark").val();
+            var json={'username':username,'password':pw1,'phone':phone,'remark':remark,"phoneCheckCode":phoneCheckCode};
+            $.post("register.do",json,function (data,textStatus) {
+               if(data=="1"){
+                   layer.msg('注册成功!',{icon:1})
+               }
+               else if(data=="2"){
+                   layer.msg('注册失败！',{icon:2})
+               }else if(data=="3"){
+                   layer.msg('验证码错误！',{icon:5})
+               }
+            })
+
+            return false;
+        });
+        //确认密码失去焦点事件
+        $("#pw2").blur(function () {
+          //得到两个控件内容
+            var pw1=$("#pw1").val();
+            var pw2=$("#pw2").val();
+            while(pw1!=pw2){
+                layer.msg("两次密码不一样",{"icon":2,"time":2000});
+                //将确认密码的输入框置空
+                $("#pw2").val("");
+                pw2 = $("#pw2").val();
+                return false;
+            }
+            return true;
+        })
+
+        //当手机号失去焦点以后拿手机号去数据库查询看是否注册过
+        $("#phone").blur(function () {
+            //得到两个控件内容
+            var phone=$("#phone").val();
+            var json={'phone':phone};
+            $.post("checkPhone.do",json,function (data,textStatus) {
+                if(data=="true"){
+                    layer.msg('对不起手机号已注册过！',{icon:5});
+                    $("#phone").val("");
+                    return;
+                }else {
+                    return;
+                }
+            })
+            return true;
+        })
+
+        $("#get-code").on("click",function () {
+            var phoneNumber=$("#phone").val();
+            var json={'phoneNumber':phoneNumber};
+            $.post("getCode.do",json,function (data,textStatus) {
+                console.log(data);
+                if(data=="true"){
+                    layer.msg('手机验证码已发送!',{icon:1})
+                }
+                else{
+                    layer.msg('手机验证码发送失败！',{icon:5})
+                }
+            })
+        })
+    });
+</script>
+</html>

@@ -1,0 +1,33 @@
+.layui-icon{   /*图标字体样式*/
+    display: inline-block;
+    margin-right: 10px;
+}
+.land{ /*欢迎登录样式*/
+    display: block;
+    font-size: 20px;
+    text-align: center;
+    margin-bottom: 12px;
+    padding-top: 12px;
+}
+.wrapper{   /*登录界面样式*/
+    background-color: rgba(255,255,255,0.5);
+    width:600px;
+    height: 300px;
+    margin:230px auto;
+    border-radius: 10px;
+    box-shadow: 3px 3px 8px #8D8D8D;
+}
+.clearfix::before,.clearfix::after /*防止高度塌陷*/
+{
+    content:'';
+    display: table;
+    clear: both;
+}
+.leftimg{   /*登录界面左侧图片样式*/
+    position:absolute;
+    left:10px;
+    top:10px;
+    width:250px;
+    height:280px;
+    border-radius: 10px;"
+}
